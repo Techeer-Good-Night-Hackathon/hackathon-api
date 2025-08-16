@@ -22,11 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    List<ErrorResponse.FieldError> errors = new ArrayList<>();
 
     // 회원가입
     @Transactional
     public Member registerMember(String name, String email, String password) {
+        List<ErrorResponse.FieldError> errors = new ArrayList<>();
+        
         if (memberRepository.existsByEmail(email)) {
             errors.add(new ErrorResponse.FieldError("email", email, "이미 사용 중인 이메일입니다."));
         }
@@ -64,14 +65,12 @@ public class MemberService {
     }
 
     // 회원 단건 조회
-    @Transactional
     public Member getMember(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
     }
 
     // 회원 전체 조회
-    @Transactional
     public List<Member> getAllMembers() {
         List<Member> members = memberRepository.findAll();
 
