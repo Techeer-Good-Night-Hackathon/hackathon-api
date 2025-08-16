@@ -36,7 +36,6 @@ public class BusinessException extends RuntimeException {
     }
 
     public void satisfies(Object object) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'satisfies'");
     }
 }

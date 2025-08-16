@@ -2,6 +2,8 @@ package hello.hackathonapi.domain.seat.entity;
 
 import hello.hackathonapi.domain.concert.entity.Concert;
 import hello.hackathonapi.domain.seat.dto.SeatUpdateRequest;
+import hello.hackathonapi.global.error.exception.BusinessException;
+import hello.hackathonapi.global.error.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -62,5 +64,25 @@ public class Seat {
         this.grade = request.getGrade();
         this.price = request.getPrice();
         this.status = request.getStatus();
+    }
+
+    public void validateAvailable() {
+        if (this.status != SeatStatus.AVAILABLE) {
+            throw new BusinessException(ErrorCode.SEAT_NOT_AVAILABLE);
+        }
+    }
+
+    public void reserve() {
+        validateAvailable();
+        this.status = SeatStatus.RESERVED;
+    }
+
+    public void cancel() {
+        this.status = SeatStatus.AVAILABLE;
+    }
+
+    // 테스트용 메서드
+    public void setStatus(SeatStatus status) {
+        this.status = status;
     }
 }
