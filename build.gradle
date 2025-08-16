@@ -25,6 +25,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'com.h2database:h2'
     implementation 'org.postgresql:postgresql:42.6.0'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -33,6 +34,12 @@ dependencies {
     
     // 개발 편의를 위한 DevTools (핫 리로드)
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // redis 설정
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // 이벤트 발행 설정
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 tasks.named('test') {

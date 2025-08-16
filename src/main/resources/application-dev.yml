@@ -1,7 +1,13 @@
 spring:
   config:
     import: file:./dev.env[.properties]
-
+    
+  data:
+    redis:
+      host: localhost
+      port: 6379
+    hikari:
+      maximum-pool-size: 50
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
     username: ${POSTGRES_USER}
@@ -17,24 +23,18 @@ spring:
         format_sql: true
     show-sql: true
 
-kakao:
-  api-key: 50cd53df1191da1df9c98c171a6ed9f8
-  admin-key: 32ce33a5a3eb4afffb05b4189311c5dd
-  base-url: https://dapi.kakao.com/v2/local
+  redis:
+    host: localhost
+    port: 6379
 
-deepseek:
-  api:
-    key: sk-ef2e56ce23884219b8239df9981c8dbc
-    url: https://api.deepseek.com/v1/chat/completions
-    model: deepseek-chat
-
-cache:
-    type: caffeine
-    caffeine:
-      spec: maximumSize=100,expireAfterWrite=300s
+server:
+  tomcat:
+    threads:
+      max: 50
 
 logging:
-  level:
-    hello.reboapi.domain.store.service: DEBUG
-    org.springframework.cache: DEBUG
-
+  #level:
+    #root: INFO
+    #hello.hackathonapi: INFO
+    #org.springframework.transaction: INFO
+    #org.hibernate.SQL: INFO
