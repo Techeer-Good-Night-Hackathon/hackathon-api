@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "reservations")
@@ -24,13 +25,13 @@ public class Reservation {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    private Member memberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seat_id", nullable = false)
-    private Seat seat;
+    private Seat seatId;
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "reservation_number", nullable = false, length = 50)
     private String reservationNumber;
 
     @Enumerated(EnumType.STRING)
@@ -46,10 +47,24 @@ public class Reservation {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Reservation(Member member, Seat seat, String reservationNumber, ReservationStatus status) {
-        this.member = member;
-        this.seat = seat;
+    private Reservation(Member memberId, Seat seatId, String reservationNumber, ReservationStatus status) {
+        this.memberId = memberId;
+        this.seatId = seatId;
         this.reservationNumber = reservationNumber;
         this.status = status;
+    }
+
+    public static Reservation createReservation(Member memberId, Seat seatId) {
+        return Reservation.builder()
+            .memberId(memberId)
+            .seatId(seatId)
+            .reservationNumber(UUID.randomUUID().toString())
+            .status(ReservationStatus.CONFIRMED)
+            .build();
+    }
+
+    public void cancel() {
+        this.status = ReservationStatus.CANCELLED;
+        this.seatId.cancel();
     }
 }

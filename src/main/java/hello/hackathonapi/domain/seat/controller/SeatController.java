@@ -1,8 +1,10 @@
 package hello.hackathonapi.domain.seat.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import hello.hackathonapi.domain.seat.dto.SeatStatusResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,10 +43,13 @@ public class SeatController {
             @ApiResponse(responseCode = "404", description = "잘못된 요청: 좌석이 존재하지 않음")
     })
     @GetMapping
-    public ResponseEntity<List<Seat>> getAllSeats(@PathVariable Long concertId) {
+    public ResponseEntity<List<SeatStatusResponse>> getAllSeats(@PathVariable Long concertId) {
         List<Seat> seats = seatService.getAllSeats(concertId);
+        List<SeatStatusResponse> responses = seats.stream()
+            .map(SeatStatusResponse::from)
+            .collect(Collectors.toList());
         
-        return new ResponseEntity<>(seats, HttpStatus.OK);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @Operation(summary = "좌석 수정", description = "좌석을 수정합니다.")
