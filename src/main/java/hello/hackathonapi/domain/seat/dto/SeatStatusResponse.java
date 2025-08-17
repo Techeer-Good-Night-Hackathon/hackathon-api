@@ -14,14 +14,18 @@ public class SeatStatusResponse {
     private SeatGrade grade;
     private Integer price;
     private SeatStatus status;
+    private Long memberId;  // 예약한 사용자 ID
+    private Long reservationId;  // 예약 ID
 
-    public static SeatStatusResponse from(Seat seat) {
+    public static SeatStatusResponse from(Seat seat, Long memberId, Long reservationId) {
         return SeatStatusResponse.builder()
             .id(seat.getId())
             .number(seat.getNumber())
             .grade(seat.getGrade())
             .price(seat.getPrice())
             .status(seat.getStatus())
+            .memberId(memberId)
+            .reservationId(reservationId)
             .build();
     }
 }

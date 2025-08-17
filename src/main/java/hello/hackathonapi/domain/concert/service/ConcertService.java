@@ -61,6 +61,12 @@ public class ConcertService {
         return concerts;
     }
 
+    // 공연 단건 조회
+    public Concert getConcert(Long id) {
+        return concertRepository.findById(id)
+            .orElseThrow(() -> new BusinessException(ErrorCode.CONCERT_NOT_FOUND));
+    }
+
     // 공연 단건 삭제
     @Transactional
     public Concert deleteConcert(Long id) {

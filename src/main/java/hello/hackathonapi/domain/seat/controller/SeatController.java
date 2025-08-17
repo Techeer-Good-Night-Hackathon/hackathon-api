@@ -1,7 +1,11 @@
 package hello.hackathonapi.domain.seat.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import hello.hackathonapi.domain.reservation.entity.Reservation;
+import hello.hackathonapi.domain.reservation.entity.ReservationStatus;
+import hello.hackathonapi.domain.reservation.repository.ReservationRepository;
 
 import org.springframework.http.HttpStatus;
 import hello.hackathonapi.domain.seat.dto.SeatStatusResponse;
@@ -24,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 public class SeatController {
     
     private final SeatService seatService;
+    private final ReservationRepository reservationRepository;
 
     @Operation(summary = "좌석 생성", description = "새로운 좌석을 등록합니다.")
     @ApiResponses(value = {
@@ -46,7 +51,12 @@ public class SeatController {
     public ResponseEntity<List<SeatStatusResponse>> getAllSeats(@PathVariable Long concertId) {
         List<Seat> seats = seatService.getAllSeats(concertId);
         List<SeatStatusResponse> responses = seats.stream()
-            .map(SeatStatusResponse::from)
+            .map(seat -> {
+                Optional<Reservation> reservation = reservationRepository.findBySeatIdAndStatus(seat, ReservationStatus.CONFIRMED);
+                Long memberId = reservation.map(r -> r.getMemberId().getId()).orElse(null);
+                Long reservationId = reservation.map(Reservation::getId).orElse(null);
+                return SeatStatusResponse.from(seat, memberId, reservationId);
+            })
             .collect(Collectors.toList());
         
         return new ResponseEntity<>(responses, HttpStatus.OK);
