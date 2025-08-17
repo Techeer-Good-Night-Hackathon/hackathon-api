@@ -66,6 +66,17 @@ public class ConcertController {
         return new ResponseEntity<>(concerts, HttpStatus.OK);
     }
 
+    @Operation(summary = "공연 단건 조회", description = "특정 공연을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "공연 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "잘못된 요청: 공연을 찾을 수 없음")
+    })
+    @GetMapping("/{concertId}")
+    public ResponseEntity<Concert> getConcert(@PathVariable Long concertId) {
+        Concert concert = concertService.getConcert(concertId);
+        return new ResponseEntity<>(concert, HttpStatus.OK);
+    }
+
     @Operation(summary = "공연 단건 삭제", description = "공연 ID로 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "공연 삭제 성공"),

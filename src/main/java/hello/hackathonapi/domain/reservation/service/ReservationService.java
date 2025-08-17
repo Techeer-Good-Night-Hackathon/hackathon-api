@@ -60,7 +60,10 @@ public class ReservationService {
             // 3. 예약 취소 처리
             reservation.cancel();
             
-            // 4. 이벤트 발행
+            // 4. 좌석 상태 변경 사항 저장
+            seatRepository.saveAndFlush(reservation.getSeatId());
+            
+            // 5. 이벤트 발행
             eventPublisher.publishEvent(reservation.getSeatId().getId(), reservation.getSeatId().getStatus());
             
             return reservation; // 더티 체킹으로 인해 자동 저장됨
